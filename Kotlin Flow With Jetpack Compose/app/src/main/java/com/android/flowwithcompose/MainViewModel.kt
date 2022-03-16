@@ -20,7 +20,7 @@ class MainViewModel : ViewModel() {
     }
 
     init {
-        collectFlow()
+        flattenFlow()
 
     }
 
@@ -39,6 +39,7 @@ class MainViewModel : ViewModel() {
     private fun collectLatestFlow() {
         viewModelScope.launch {
             countDownFlow.collectLatest { time ->
+                println("We are in collect latest")
                 delay(1500)
                 println("Time is $time")
             }
@@ -59,12 +60,14 @@ class MainViewModel : ViewModel() {
 
     private fun collectFlowWithFilterAndMap() {
         viewModelScope.launch {
-            countDownFlow.filter { time ->
+            val flow = countDownFlow.filter { time ->
                 time % 2 == 0
             }.map { time ->
                 time * time
-            }.collect { time ->
-                println("Time is $time")
+            }
+
+            flow.collect{
+
             }
         }
     }
@@ -125,24 +128,25 @@ class MainViewModel : ViewModel() {
     // Flatten flows, if we have two flows then we can combine these to have the results coming in a single flow.
 
     private fun flattenFlow() {
+        viewModelScope.launch {
         val flow1 = flow<Int> {
             emit(1)
             delay(500)
             emit(2)
         }
 
-        val flow2 = flow<Int> {
-            emit(1)
-            delay(500)
-            emit(2)
-            delay(500)
-            emit(3)
-        }
-        viewModelScope.launch {
-            val result = countDownFlow.fold(100) { accumulator , value ->
-                accumulator + value
+
+            flow1.flatMapConcat { value ->
+                flow {
+                    emit(value + 1)
+                    delay(500)
+                    emit(value + 1)
+                }
+             }.collect { value ->
+                print("mainFlow $value")
             }
-            println("Result is $result")
+
+
         }
     }
 }
