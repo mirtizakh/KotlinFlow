@@ -66,7 +66,7 @@ class MainViewModel : ViewModel() {
                 time * time
             }
 
-            flow.collect{
+            flow.collect {
 
             }
         }
@@ -107,7 +107,7 @@ class MainViewModel : ViewModel() {
 
     private fun collectFlowWithReduce() {
         viewModelScope.launch {
-            val result = countDownFlow.reduce { accumulator , value ->
+            val result = countDownFlow.reduce { accumulator, value ->
                 accumulator + value
             }
             println("Result is $result")
@@ -117,10 +117,79 @@ class MainViewModel : ViewModel() {
 
     private fun collectFlowWithFold() {
         viewModelScope.launch {
-            val result = countDownFlow.fold(100) { accumulator , value ->
+            val result = countDownFlow.fold(100) { accumulator, value ->
                 accumulator + value
             }
             println("Result is $result")
+        }
+    }
+
+    private fun collectFlowWithTake() {
+        viewModelScope.launch {
+            countDownFlow
+                .take(4)
+                .collect { time ->
+                    println("Time is $time")
+                }
+        }
+    }
+
+    private fun collectFlowWithTakeWhile() {
+        viewModelScope.launch {
+            val startTime = System.currentTimeMillis()
+            (1..1000).asFlow()
+                .takeWhile { System.currentTimeMillis() - startTime < 10 }
+                .collect { time ->
+                    println("Time is $time")
+                }
+        }
+    }
+
+    private fun zipNormalExample(){
+        // It is used to combine 2 flows
+        val num = (1..3).asFlow()
+        val strs = flowOf("one","two","three")
+        viewModelScope.launch {
+            num.zip(strs){a,b -> "$a -> $b"} // compose a single string with "zip"
+                .collect { value ->
+                    println("$value")
+                }
+        }
+    }
+
+    private fun zipWhenOneCompletesBeforeAnother(){
+        // It is used to combine 2 flows
+        val num = (1..3).asFlow()
+        val strs = flowOf("one","two","three","four")
+        viewModelScope.launch {
+            num.zip(strs){a,b -> "$a -> $b"} // compose a single string with "zip"
+                .collect { value ->
+                    println("$value")
+                }
+        }
+    }
+
+    private fun zipWhenOneEmitsAfterSomeDelay(){
+        // It is used to combine 2 flows
+        val num = (1..3).asFlow().onEach { delay(500) }
+        val strs = flowOf("one","two","three").onEach { delay(600) }
+        viewModelScope.launch {
+            num.zip(strs){a,b -> "$a -> $b"} // compose a single string with "zip"
+                .collect { value ->
+                    println("$value")
+                }
+        }
+    }
+
+    private fun combineWhenOneEmitsAfterSomeDelay(){
+        // It is used to combine 2 flows
+        val num = (1..3).asFlow().onEach { delay(500) }
+        val strs = flowOf("one","two","three").onEach { delay(600) }
+        viewModelScope.launch {
+            num.combine(strs){a,b -> "$a -> $b"} // compose a single string with "zip"
+                .collect { value ->
+                    println("$value")
+                }
         }
     }
 
@@ -129,11 +198,11 @@ class MainViewModel : ViewModel() {
 
     private fun flattenFlow() {
         viewModelScope.launch {
-        val flow1 = flow<Int> {
-            emit(1)
-            delay(500)
-            emit(2)
-        }
+            val flow1 = flow<Int> {
+                emit(1)
+                delay(500)
+                emit(2)
+            }
 
 
             flow1.flatMapConcat { value ->
@@ -142,7 +211,7 @@ class MainViewModel : ViewModel() {
                     delay(500)
                     emit(value + 1)
                 }
-             }.collect { value ->
+            }.collect { value ->
                 print("mainFlow $value")
             }
 
