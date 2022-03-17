@@ -1,0 +1,16 @@
+
+Hkotlin:S1144"0Remove this unused private "collectFlow" method.(ğ’¨ò
+Nkotlin:S1144'"6Remove this unused private "collectLatestFlow" method.(³¦²à
+Wkotlin:S11442":Remove this unused private "collectFlowWithFilter" method.(ßÚğÿÿÿÿÿ
+Xkotlin:S1144="@Remove this unused private "collectFlowWithFilterAndMap" method.(³¨İÜ
+akotlin:S1144L"IRemove this unused private "collectFlowWithFilterAndMapAndOnEach" method.(ƒ¢³‰
+Wkotlin:S1144[":Remove this unused private "collectFlowWithOnEach" method.(ó‚œşÿÿÿÿ
+Qkotlin:S1144b"9Remove this unused private "collectFlowWithCount" method.(…‰±Å
+Wkotlin:S1144l":Remove this unused private "collectFlowWithReduce" method.(Æ¢—Åûÿÿÿÿ
+Pkotlin:S1144v"8Remove this unused private "collectFlowWithFold" method.(Šúğ›
+Ukotlin:S1144"8Remove this unused private "collectFlowWithTake" method.(…ŒëËùÿÿÿÿ
+Vkotlin:S1144‰"=Remove this unused private "collectFlowWithTakeWhile" method.(½Ğê„
+Nkotlin:S1144”"5Remove this unused private "zipNormalExample" method.(°ÃÈ–
+ckotlin:S1144 "ERemove this unused private "zipWhenOneCompletesBeforeAnother" method.(Ó¥Åıÿÿÿÿ
+`kotlin:S1144¬"BRemove this unused private "zipWhenOneEmitsAfterSomeDelay" method.(à¹¾øÿÿÿÿ
+kkotlin:S1144¸"FRemove this unused private "combineWhenOneEmitsAfterSomeDelay" method.(ìèıëùÿÿÿÿ8øÄºŒù/

@@ -152,7 +152,7 @@ class MainViewModel : ViewModel() {
         viewModelScope.launch {
             num.zip(strs){a,b -> "$a -> $b"} // compose a single string with "zip"
                 .collect { value ->
-                    println("$value")
+                    println("value $value")
                 }
         }
     }
@@ -164,7 +164,7 @@ class MainViewModel : ViewModel() {
         viewModelScope.launch {
             num.zip(strs){a,b -> "$a -> $b"} // compose a single string with "zip"
                 .collect { value ->
-                    println("$value")
+                    println("value $value")
                 }
         }
     }
@@ -176,7 +176,7 @@ class MainViewModel : ViewModel() {
         viewModelScope.launch {
             num.zip(strs){a,b -> "$a -> $b"} // compose a single string with "zip"
                 .collect { value ->
-                    println("$value")
+                    println("value $value")
                 }
         }
     }
@@ -188,7 +188,7 @@ class MainViewModel : ViewModel() {
         viewModelScope.launch {
             num.combine(strs){a,b -> "$a -> $b"} // compose a single string with "zip"
                 .collect { value ->
-                    println("$value")
+                    println("value $value")
                 }
         }
     }
@@ -197,14 +197,14 @@ class MainViewModel : ViewModel() {
     // Flatten flows, if we have two flows then we can combine these to have the results coming in a single flow.
 
     private fun flattenFlow() {
-        viewModelScope.launch {
+
             val flow1 = flow<Int> {
                 emit(1)
                 delay(500)
                 emit(2)
             }
 
-
+        viewModelScope.launch {
             flow1.flatMapConcat { value ->
                 flow {
                     emit(value + 1)
@@ -212,10 +212,8 @@ class MainViewModel : ViewModel() {
                     emit(value + 1)
                 }
             }.collect { value ->
-                print("mainFlow $value")
+                println("mainFlow $value")
             }
-
-
         }
     }
 }

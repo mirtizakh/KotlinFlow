@@ -1,8 +1,10 @@
 package com.flow
 
 import android.util.Log
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 
@@ -12,8 +14,8 @@ private suspend fun createFlowChain() {
             delay(500)
             emit(value)
         }
-    }.collect { value ->
-        Log.d("FlowChain", "collect $value")
+    }.collect {item->
+        Log.d("FlowChain", "collect $item")
     }
 }
 

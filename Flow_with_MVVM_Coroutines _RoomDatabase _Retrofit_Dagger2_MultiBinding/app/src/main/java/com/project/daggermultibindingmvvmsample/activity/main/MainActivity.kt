@@ -3,31 +3,41 @@ package com.project.daggermultibindingmvvmsample.activity.main
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.project.daggermultibindingmvvmsample.CoroutinesDispatcherProvider
 import com.project.daggermultibindingmvvmsample.Factory.ViewModelFactory
 import com.project.daggermultibindingmvvmsample.R
-import com.project.daggermultibindingmvvmsample.SingleDataModel
+import com.project.daggermultibindingmvvmsample.Users
 import com.project.daggermultibindingmvvmsample.activity.showToast
+import com.project.daggermultibindingmvvmsample.db.UsersDao
 import com.project.daggermultibindingmvvmsample.recyclerview.UsersAdapter
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@ExperimentalCoroutinesApi
 class MainActivity : DaggerAppCompatActivity() {
 
-    lateinit var mainActivityViewModel : MainActivityViewModel
+    private val mainActivityViewModel : MainActivityViewModel by viewModels{ viewModelFactory }
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
+    @Inject
+    lateinit var usersDao: UsersDao
+    @Inject
+    lateinit var coroutinesDispatcherProvider: CoroutinesDispatcherProvider
     lateinit var adapter : UsersAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        mainActivityViewModel = ViewModelProviders.of(this,viewModelFactory).get(
-            MainActivityViewModel::class.java)
         observeViewState()
+        observeUsersInDatabase()
     }
 
     private fun observeViewState() {
@@ -37,14 +47,19 @@ class MainActivity : DaggerAppCompatActivity() {
                     initialUiState()
                     showLoading()
                 }
-                is MainActivityViewState.ShowData -> {
-                    showData(state.data)
-                }
                 is MainActivityViewState.ShowError -> {
                     showError(state.error)
                 }
             }
         })
+    }
+
+    private fun observeUsersInDatabase() {
+        CoroutineScope(coroutinesDispatcherProvider.main).launch {
+            usersDao.getAllUsersDistinctUntilChanged().collect {
+                users -> showData(users)
+            }
+        }
     }
 
     private fun initialUiState(){
@@ -60,7 +75,7 @@ class MainActivity : DaggerAppCompatActivity() {
         progress_circular.visibility = View.VISIBLE
     }
 
-    private fun showData(data: List<SingleDataModel>) {
+    private fun showData(data: List<Users>) {
         removeProgressDialog()
         recyclerview.visibility = View.VISIBLE
         adapter.submitList(data)

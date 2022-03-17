@@ -4,12 +4,12 @@ import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.project.daggermultibindingmvvmsample.R
-import com.project.daggermultibindingmvvmsample.SingleDataModel
+import com.project.daggermultibindingmvvmsample.Users
 import kotlinx.android.synthetic.main.layout_single_item.view.*
 
 class UserViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
     
-    fun bindTo(user: SingleDataModel){
+    fun bindTo(user: Users){
         itemView.name.text = user.first_name
         Glide
             .with(itemView)

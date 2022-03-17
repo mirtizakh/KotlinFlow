@@ -1,15 +1,15 @@
 package com.project.daggermultibindingmvvmsample.recyclerview
 
 import androidx.recyclerview.widget.DiffUtil
-import com.project.daggermultibindingmvvmsample.SingleDataModel
+import com.project.daggermultibindingmvvmsample.Users
 
-class UserItemDiffCallback : DiffUtil.ItemCallback<SingleDataModel>() {
+class UserItemDiffCallback : DiffUtil.ItemCallback<Users>() {
 
     override fun areItemsTheSame
-                (oldItem: SingleDataModel, newItem: SingleDataModel): Boolean
+                (oldItem: Users, newItem: Users): Boolean
             = oldItem.id == newItem.id
 
     override fun areContentsTheSame
-                (oldItem: SingleDataModel, newItem: SingleDataModel): Boolean
+                (oldItem: Users, newItem: Users): Boolean
             = oldItem == newItem
 }
